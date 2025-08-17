@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Race Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+
+/* Body */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Background layers */
+.bg-layer {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 3s ease-in-out;
+    z-index: -2;
+}
+
+/* Dark overlay */
+body::before {
+    content:'';
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    z-index:-1;
+}
+
+/* Container */
+.container {
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    padding: 30px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    z-index:1;
+}
+
+/* Heading */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    color: #ffd700;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
+
+/* Time Box (3D Card Style) */
+.time-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+    padding: 18px 25px;
+    border-radius: 18px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: right;
+    animation: fadeIn 1.5s ease-in-out;
+    border: 1px solid rgba(255,255,255,0.25);
+    z-index:2;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.time-box:hover {
+    transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    box-shadow: 0 20px 40px rgba(255,215,0,0.6), inset 0 0 20px rgba(255,255,255,0.3);
+}
+.time-box p {
+    margin: 6px 0;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+}
+
+/* Neon glow animation */
+@keyframes glow {
+    0% { box-shadow: 0 0 10px #ffd700, inset 0 0 10px rgba(255,255,255,0.2); }
+    50% { box-shadow: 0 0 25px #00c3ff, inset 0 0 20px rgba(255,255,255,0.3); }
+    100% { box-shadow: 0 0 10px #ffd700, inset 0 0 10px rgba(255,255,255,0.2); }
+}
+.time-box {
+    animation: glow 4s infinite alternate ease-in-out, fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Professional Button style with gradient */
+button {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border: none;
+    padding: 15px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 3px 10px rgba(255,255,255,0.1) inset;
+    transform-style: preserve-3d;
+}
+
+/* Hover 3D & glow */
+button:hover {
+    transform: translateY(-4px) scale(1.03) rotateX(2deg);
+    box-shadow: 0 15px 35px rgba(255,215,0,0.8), 0 0 15px rgba(255,255,255,0.3) inset;
+}
+
+/* Shine overlay */
+button::before {
+    content:'';
+    position:absolute;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg);
+    transition: all 0.5s;
+    filter: blur(6px);
+}
+button:hover::before {
+    top:-20%;
+    left:-20%;
+}
+
+/* Particle effect */
+.particle-btn {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+    0% { transform: translate(0,0) scale(1); opacity:1; }
+    50% { transform: translate(calc(-10px + 20px*var(--randX)), -15px) scale(1.2); opacity:0.6; }
+    100% { transform: translate(0,0) scale(1); opacity:1; }
+}
+
+/* Button text icon */
+button span {
+    position: relative;
+    z-index:1;
+}
+button span::before {
+    content: "🏇 ";
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+/* Responsive */
+@media(max-width: 500px){
+    .container { padding: 25px 15px; }
+    h1 { font-size: 1.8rem; margin-bottom: 15px; }
+    button { font-size: 0.9rem; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="bg-layer" id="bg1"></div>
+<div class="bg-layer" id="bg2"></div>
+
+<!-- Time Box (3D) -->
+<div class="time-box">
+    <p id="uk-time"></p>
+    <p id="sl-time"></p>
+    <p id="aus-time"></p>
+</div>
+
+<div class="container">
+    <h1>MasterTrack Hub</h1>
+    <div class="buttons">
+        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>UK Time Manager</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>Tipping Editor</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>AUS Race Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/kh-marker/')"><span>Harness K/H Tool</span></button>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 Charith Neranga | VIP Dashboard
+</footer>
+
+<script>
+// Open website in new tab
+function openSite(url){
+    window.open(url,'_blank');
+}
+
+// Add particles dynamically on buttons
+document.querySelectorAll('.buttons button').forEach(btn => {
+    for(let i=0;i<5;i++){
+        let particle = document.createElement('div');
+        particle.classList.add('particle-btn');
+        particle.style.setProperty('--randX', Math.random());
+        particle.style.top = Math.random()*100 + '%';
+        particle.style.left = Math.random()*100 + '%';
+        btn.appendChild(particle);
+    }
+});
+
+// Smooth background slideshow
+const bgImages = [
+    'https://png.pngtree.com/background/20250209/original/pngtree-jockeys-competing-on-horses-in-a-fast-paced-race-capturing-the-picture-image_16064888.jpg',
+    'https://horseracinggift.co.uk/cdn/shop/files/AdobeStock_49474608_77d0e1d1-a2a7-4624-809a-b158df80ca20.jpg?v=1693395886&width=1500',
+    'https://static1.squarespace.com/static/517636f8e4b0cb4f8c8697ba/t/687270061c520f20fb77da16/1739740259252/Guernsey+Race+Club+L%27Ancresse+meeting+2019?format=1500w',
+    'https://www.fakenhamracecourse.co.uk/wp-content/uploads/2024/05/LBM_6892-scaled-e1714561421123.jpg'
+];
+let current = 0;
+let bg1 = document.getElementById('bg1');
+let bg2 = document.getElementById('bg2');
+
+bg1.style.backgroundImage = `url('${bgImages[0]}')`;
+bg1.style.opacity = 1;
+bg2.style.opacity = 0;
+
+setInterval(() => {
+    const next = (current + 1) % bgImages.length;
+    bg2.style.backgroundImage = `url('${bgImages[next]}')`;
+    bg2.style.opacity = 1;
+    setTimeout(() => {
+        bg1.style.backgroundImage = bgImages[next];
+        bg2.style.opacity = 0;
+        current = next;
+    }, 3000);
+}, 8000);
+
+// Update Time Function
+function updateTimes(){
+    let now = new Date();
+
+    // UK
+    let uk = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: true });
+    document.getElementById("uk-time").innerText = "🇬🇧 UK Time: " + uk;
+
+    // Sri Lanka
+    let sl = now.toLocaleString("en-GB", { timeZone: "Asia/Colombo", hour12: true });
+    document.getElementById("sl-time").innerText = "🇱🇰 SL Time: " + sl;
+
+    // Australia (Sydney)
+    let aus = now.toLocaleString("en-GB", { timeZone: "Australia/Sydney", hour12: true });
+    document.getElementById("aus-time").innerText = "🇦🇺 AUS Time: " + aus;
+}
+
+// Update every second
+setInterval(updateTimes, 1000);
+updateTimes();
+
+</script>
+</body>
+</html>
