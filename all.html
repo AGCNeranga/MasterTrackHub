@@ -277,15 +277,15 @@ function updateTimes(){
 
     // UK
     let uk = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: true });
-    document.getElementById("uk-time").innerText = "🇬🇧 UK Time: " + uk;
+    document.getElementById("uk-time").innerText = "🇬🇧 UK : " + uk;
 
     // Sri Lanka
     let sl = now.toLocaleString("en-GB", { timeZone: "Asia/Colombo", hour12: true });
-    document.getElementById("sl-time").innerText = "🇱🇰 SL Time: " + sl;
+    document.getElementById("sl-time").innerText = "🇱🇰 SL : " + sl;
 
     // Australia (Sydney)
     let aus = now.toLocaleString("en-GB", { timeZone: "Australia/Sydney", hour12: true });
-    document.getElementById("aus-time").innerText = "🇦🇺 AUS Time: " + aus;
+    document.getElementById("aus-time").innerText = "🇦🇺 AUS : " + aus;
 }
 
 // Update every second
@@ -295,3 +295,4 @@ updateTimes();
 </script>
 </body>
 </html>
+
