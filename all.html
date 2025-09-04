@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP Race Dashboard</title>
+<title>VIP Horse Race Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
@@ -19,7 +19,7 @@ body {
     position: relative;
 }
 
-/* Background layers */
+/* Background */
 .bg-layer {
     position: fixed;
     top:0;
@@ -66,7 +66,7 @@ h1 {
     text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
 }
 
-/* Time Box (3D Card Style) */
+/* Time Box 3D Style */
 .time-box {
     position: absolute;
     top: 20px;
@@ -117,7 +117,7 @@ h1 {
     gap: 15px;
 }
 
-/* Professional Button style with gradient */
+/* VIP AGCN Button style */
 button {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     border: none;
@@ -135,7 +135,7 @@ button {
     transform-style: preserve-3d;
 }
 
-/* Hover 3D & glow */
+/* Hover 3D AGCN */
 button:hover {
     transform: translateY(-4px) scale(1.03) rotateX(2deg);
     box-shadow: 0 15px 35px rgba(255,215,0,0.8), 0 0 15px rgba(255,255,255,0.3) inset;
@@ -214,12 +214,14 @@ footer {
 </div>
 
 <div class="container">
-    <h1>MasterTrack Hub</h1>
+    <h1>Global Horse Race Hub</h1>
     <div class="buttons">
-        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>UK Time Manager</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>Tipping Editor</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>AUS Race Tracker</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/kh-marker/')"><span>Harness K/H Tool</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>UK Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>UK RaceTips Editor</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>AUS Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/kh-marker/')"><span>Harness K/H Tool 1</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/.k..h.-marker2/')"><span>Harness .K./.H. Tool 2</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TARR_AUS_PA/')"><span>TARR AUS .K./.H. Tool 3</span></button>
     </div>
 </div>
 
@@ -233,7 +235,7 @@ function openSite(url){
     window.open(url,'_blank');
 }
 
-// Add particles dynamically on buttons
+// dynamic AGCN buttons
 document.querySelectorAll('.buttons button').forEach(btn => {
     for(let i=0;i<5;i++){
         let particle = document.createElement('div');
@@ -245,7 +247,7 @@ document.querySelectorAll('.buttons button').forEach(btn => {
     }
 });
 
-// Smooth background slideshow
+// Smooth AGCN slideshow
 const bgImages = [
     'https://www.virtuallakedistrict.net/wp-content/uploads/2022/10/A-Guide-To-Horse-Racing.jpg',
     'https://horseracinggift.co.uk/cdn/shop/files/AdobeStock_49474608_77d0e1d1-a2a7-4624-809a-b158df80ca20.jpg?v=1693395886&width=1500',
@@ -271,7 +273,7 @@ setInterval(() => {
     }, 3000);
 }, 8000);
 
-// Update Time Function
+// Updated AGCN Time Function
 function updateTimes(){
     let now = new Date();
 
@@ -295,5 +297,13 @@ updateTimes();
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 
 
