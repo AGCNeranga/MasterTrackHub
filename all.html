@@ -230,13 +230,10 @@ footer {
 </footer>
 
 <script type="module">
-  // Firebase SDK imports
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-  // Your Firebase configuration with Realtime Database
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
     authDomain: "vipdashboard-14354.firebaseapp.com",
@@ -250,49 +247,21 @@ footer {
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
   const database = getDatabase(app);
-  const provider = new GoogleAuthProvider();
 
-  // Elements
-  const loginBtn = document.createElement("button");
-  loginBtn.textContent = "🔑 Login with Google";
-  loginBtn.style.cssText = "margin-top:20px; padding:10px 20px; font-size:16px;";
-  document.querySelector(".container").prepend(loginBtn);
+  // Collect visitor info
+  const visitorData = {
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    language: navigator.language,
+    url: window.location.href
+  };
 
-  const userInfo = document.createElement("p");
-  document.querySelector(".container").prepend(userInfo);
-
-  // Login function
-  loginBtn.addEventListener("click", async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Show user info
-      userInfo.textContent = `✅ Welcome ${user.displayName} (${user.email})`;
-
-      // Save to Realtime Database
-      const userRef = ref(database, 'users/' + user.uid);
-      await set(userRef, {
-        name: user.displayName,
-        email: user.email,
-        lastLogin: new Date().toISOString()
-      });
-
-      loginBtn.textContent = "🚪 Logout";
-      loginBtn.onclick = async () => {
-        await signOut(auth);
-        userInfo.textContent = "";
-        loginBtn.textContent = "🔑 Login with Google";
-      };
-
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed: " + error.message);
-    }
-  });
+  // Save to Realtime Database under "visitors"
+  const visitorsRef = ref(database, 'visitors');
+  push(visitorsRef, visitorData)
+    .then(() => console.log("Visitor data saved successfully"))
+    .catch(err => console.error("Error saving visitor data:", err));
 </script>
 
 
@@ -364,6 +333,7 @@ updateTimes();
 </script>
 </body>
 </html>
+
 
 
 
