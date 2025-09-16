@@ -35,12 +35,8 @@ body {
 
 /* Dark overlay */
 body::before {
-    content:'';
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.5);
-    z-index:-1;
+    content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.5); z-index:-1;
 }
 
 /* Container */
@@ -101,9 +97,7 @@ h1 {
     50% { box-shadow: 0 0 25px #00c3ff, inset 0 0 20px rgba(255,255,255,0.3); }
     100% { box-shadow: 0 0 10px #ffd700, inset 0 0 10px rgba(255,255,255,0.2); }
 }
-.time-box {
-    animation: glow 4s infinite alternate ease-in-out, fadeIn 1.5s ease-in-out;
-}
+.time-box { animation: glow 4s infinite alternate ease-in-out, fadeIn 1.5s ease-in-out; }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-15px); }
@@ -111,11 +105,7 @@ h1 {
 }
 
 /* Buttons */
-.buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+.buttons { display: flex; flex-direction: column; gap: 15px; }
 
 /* VIP AGCN Button style */
 button {
@@ -143,19 +133,11 @@ button:hover {
 
 /* Shine overlay */
 button::before {
-    content:'';
-    position:absolute;
-    top:-50%; left:-50%;
-    width:200%; height:200%;
+    content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
     background: rgba(255,255,255,0.1);
-    transform: rotate(45deg);
-    transition: all 0.5s;
-    filter: blur(6px);
+    transform: rotate(45deg); transition: all 0.5s; filter: blur(6px);
 }
-button:hover::before {
-    top:-20%;
-    left:-20%;
-}
+button:hover::before { top:-20%; left:-20%; }
 
 /* Particle effect */
 .particle-btn {
@@ -166,7 +148,6 @@ button:hover::before {
     border-radius: 50%;
     animation: float 2s infinite ease-in-out;
 }
-
 @keyframes float {
     0% { transform: translate(0,0) scale(1); opacity:1; }
     50% { transform: translate(calc(-10px + 20px*var(--randX)), -15px) scale(1.2); opacity:0.6; }
@@ -174,13 +155,8 @@ button:hover::before {
 }
 
 /* Button text icon */
-button span {
-    position: relative;
-    z-index:1;
-}
-button span::before {
-    content: "🏇 ";
-}
+button span { position: relative; z-index:1; }
+button span::before { content: "🏇 "; }
 
 /* Footer */
 footer {
@@ -201,6 +177,25 @@ footer {
 </style>
 </head>
 <body>
+
+<!-- Name Entry Overlay -->
+<div id="name-overlay" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    backdrop-filter: blur(10px); background: rgba(0,0,0,0.8);
+    display:flex; justify-content:center; align-items:center;
+    flex-direction:column; z-index:9999; color:white; text-align:center;
+">
+    <h2 style="margin-bottom:15px;">Enter Your Name to Continue</h2>
+    <input id="visitor-name" type="text" placeholder="Your Name" style="
+        padding:12px 20px; border-radius:10px; border:none;
+        font-size:1rem; margin-bottom:15px; text-align:center;
+    "/>
+    <button id="submit-name" style="
+        padding:10px 20px; border-radius:10px; border:none;
+        font-size:1rem; background:linear-gradient(135deg, #6a11cb, #2575fc);
+        color:white; cursor:pointer;
+    ">Enter</button>
+</div>
 
 <!-- Background layers -->
 <div class="bg-layer" id="bg1"></div>
@@ -271,7 +266,7 @@ footer {
     return "Unknown";
   }
 
-  async function logVisitor() {
+  async function logVisitor(name) {
     try {
       // Get IP & location info
       const response = await fetch('https://ipapi.co/json/');
@@ -279,6 +274,7 @@ footer {
 
       // Visitor info
       const visitorData = {
+        name: name || "Anonymous",
         timestamp: new Date().toISOString(),
         ip: data.ip,
         country: data.country_name,
@@ -303,11 +299,7 @@ footer {
       console.error("Error logging visitor:", err);
     }
   }
-
-  logVisitor();
 </script>
-
-
 
 <script>
 // Open website in new tab
@@ -356,39 +348,36 @@ setInterval(() => {
 // Updated AGCN Time Function
 function updateTimes(){
     let now = new Date();
-
-    // UK
     let uk = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: true });
     document.getElementById("uk-time").innerText = "🇬🇧 UK : " + uk;
-
-    // Sri Lanka
     let sl = now.toLocaleString("en-GB", { timeZone: "Asia/Colombo", hour12: true });
     document.getElementById("sl-time").innerText = "🇱🇰 SL : " + sl;
-
-    // Australia (Sydney)
     let aus = now.toLocaleString("en-GB", { timeZone: "Australia/Sydney", hour12: true });
     document.getElementById("aus-time").innerText = "🇦🇺 AUS : " + aus;
 }
-
-// Update every second
 setInterval(updateTimes, 1000);
 updateTimes();
 
+// Overlay functionality
+const overlay = document.getElementById('name-overlay');
+const input = document.getElementById('visitor-name');
+const submitBtn = document.getElementById('submit-name');
+
+submitBtn.addEventListener('click', () => {
+    const name = input.value.trim();
+    if(name === "") {
+        alert("Please enter your name");
+        return;
+    }
+    overlay.style.display = 'none';  // Hide overlay
+    logVisitor(name);                // Log visitor with name
+});
+
+input.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter'){
+        submitBtn.click();
+    }
+});
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
