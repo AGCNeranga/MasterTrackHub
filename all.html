@@ -231,7 +231,7 @@ footer {
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
   // Firebase config
   const firebaseConfig = {
@@ -245,24 +245,68 @@ footer {
     databaseURL: "https://vipdashboard-14354-default-rtdb.firebaseio.com/"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-  // Collect visitor info
-  const visitorData = {
-    timestamp: new Date().toISOString(),
-    userAgent: navigator.userAgent,
-    language: navigator.language,
-    url: window.location.href
-  };
+  function detectBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf("Chrome") > -1) return "Chrome";
+    if (ua.indexOf("Firefox") > -1) return "Firefox";
+    if (ua.indexOf("Safari") > -1) return "Safari";
+    if (ua.indexOf("Edge") > -1) return "Edge";
+    if (ua.indexOf("Opera") > -1) return "Opera";
+    return "Unknown";
+  }
 
-  // Save to Realtime Database under "visitors"
-  const visitorsRef = ref(database, 'visitors');
-  push(visitorsRef, visitorData)
-    .then(() => console.log("Visitor data saved successfully"))
-    .catch(err => console.error("Error saving visitor data:", err));
+  function detectOS() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf("Windows NT 10.0") !== -1) return "Windows 10";
+    if (ua.indexOf("Windows NT 6.3") !== -1) return "Windows 8.1";
+    if (ua.indexOf("Windows NT 6.2") !== -1) return "Windows 8";
+    if (ua.indexOf("Windows NT 6.1") !== -1) return "Windows 7";
+    if (ua.indexOf("Mac OS X") !== -1) return "MacOS";
+    if (ua.indexOf("Linux") !== -1) return "Linux";
+    if (ua.indexOf("Android") !== -1) return "Android";
+    if (ua.indexOf("iPhone") !== -1) return "iOS";
+    return "Unknown";
+  }
+
+  async function logVisitor() {
+    try {
+      // Get IP & location info
+      const response = await fetch('https://ipapi.co/json/');
+      const data = await response.json();
+
+      // Visitor info
+      const visitorData = {
+        timestamp: new Date().toISOString(),
+        ip: data.ip,
+        country: data.country_name,
+        region: data.region,
+        city: data.city,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        browser: detectBrowser(),
+        os: detectOS(),
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        url: window.location.href
+      };
+
+      // Save to Firebase
+      const visitorsRef = ref(database, 'visitors');
+      push(visitorsRef, visitorData);
+
+      console.log("Visitor data saved:", visitorData);
+
+    } catch(err) {
+      console.error("Error logging visitor:", err);
+    }
+  }
+
+  logVisitor();
 </script>
+
 
 
 <script>
@@ -333,7 +377,6 @@ updateTimes();
 </script>
 </body>
 </html>
-
 
 
 
