@@ -229,6 +229,50 @@ footer {
     &copy; 2025 Charith Neranga | VIP Dashboard
 </footer>
 
+    <!--Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+<script>
+// Replace with your Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
+  authDomain: "vipdashboard-14354.firebaseapp.com",
+  projectId: "vipdashboard-14354",
+  storageBucket: "vipdashboard-14354.firebasestorage.app",
+  messagingSenderId: "473646422817",
+  appId: "1:473646422817:web:725c533872395a442afc60",
+  measurementId: "G-DYMCWEQYEQ"
+};
+
+// Init Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Google login
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(result => {
+    const user = result.user;
+
+    // Show welcome message
+    document.getElementById("user-info").innerText = `Welcome ${user.displayName}`;
+    document.getElementById("tools").style.display = "flex";
+
+    // Save user details to Firestore
+    db.collection("users").doc(user.uid).set({
+      name: user.displayName,
+      email: user.email,
+      lastLogin: new Date().toISOString()
+    }, { merge: true });
+  }).catch(error => {
+    console.error("Login Error:", error);
+  });
+});
+</script>
+
 <script>
 // Open website in new tab
 function openSite(url){
@@ -297,6 +341,7 @@ updateTimes();
 </script>
 </body>
 </html>
+
 
 
 
