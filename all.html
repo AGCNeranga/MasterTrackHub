@@ -229,49 +229,70 @@ footer {
     &copy; 2025 Charith Neranga | VIP Dashboard
 </footer>
 
-    <!--Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+<script type="module">
+  // Firebase SDK imports
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-<script>
-// Replace with your Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
-  authDomain: "vipdashboard-14354.firebaseapp.com",
-  projectId: "vipdashboard-14354",
-  storageBucket: "vipdashboard-14354.firebasestorage.app",
-  messagingSenderId: "473646422817",
-  appId: "1:473646422817:web:725c533872395a442afc60",
-  measurementId: "G-DYMCWEQYEQ"
-};
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
+    authDomain: "vipdashboard-14354.firebaseapp.com",
+    projectId: "vipdashboard-14354",
+    storageBucket: "vipdashboard-14354.firebasestorage.app",
+    messagingSenderId: "473646422817",
+    appId: "1:473646422817:web:725c533872395a442afc60",
+    measurementId: "G-DYMCWEQYEQ"
+  };
 
-// Init Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
 
-// Google login
-document.getElementById("loginBtn").addEventListener("click", () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).then(result => {
-    const user = result.user;
+  // Elements
+  const loginBtn = document.createElement("button");
+  loginBtn.textContent = "🔑 Login with Google";
+  loginBtn.style.cssText = "margin-top:20px; padding:10px 20px; font-size:16px;";
+  document.querySelector(".container").prepend(loginBtn);
 
-    // Show welcome message
-    document.getElementById("user-info").innerText = `Welcome ${user.displayName}`;
-    document.getElementById("tools").style.display = "flex";
+  const userInfo = document.createElement("p");
+  document.querySelector(".container").prepend(userInfo);
 
-    // Save user details to Firestore
-    db.collection("users").doc(user.uid).set({
-      name: user.displayName,
-      email: user.email,
-      lastLogin: new Date().toISOString()
-    }, { merge: true });
-  }).catch(error => {
-    console.error("Login Error:", error);
+  // Login function
+  loginBtn.addEventListener("click", async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Show user info
+      userInfo.textContent = `✅ Welcome ${user.displayName} (${user.email})`;
+
+      // Save to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: user.displayName,
+        email: user.email,
+        lastLogin: new Date().toISOString()
+      });
+
+      loginBtn.textContent = "🚪 Logout";
+      loginBtn.onclick = async () => {
+        await signOut(auth);
+        userInfo.textContent = "";
+        loginBtn.textContent = "🔑 Login with Google";
+      };
+
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed: " + error.message);
+    }
   });
-});
 </script>
+
 
 <script>
 // Open website in new tab
@@ -341,6 +362,7 @@ updateTimes();
 </script>
 </body>
 </html>
+
 
 
 
