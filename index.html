@@ -228,7 +228,6 @@ footer {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
     authDomain: "vipdashboard-14354.firebaseapp.com",
@@ -268,11 +267,9 @@ footer {
 
   async function logVisitor(name) {
     try {
-      // Get IP & location info
       const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
 
-      // Visitor info
       const visitorData = {
         name: name || "Anonymous",
         timestamp: new Date().toISOString(),
@@ -289,17 +286,31 @@ footer {
         url: window.location.href
       };
 
-      // Save to Firebase
       const visitorsRef = ref(database, 'visitors');
       push(visitorsRef, visitorData);
-
       console.log("Visitor data saved:", visitorData);
-
     } catch(err) {
       console.error("Error logging visitor:", err);
     }
   }
+
+  // --- Overlay Handling ---
+  const overlay = document.getElementById('name-overlay');
+  const input = document.getElementById('visitor-name');
+  const submitBtn = document.getElementById('submit-name');
+
+  submitBtn.addEventListener('click', () => {
+      const name = input.value.trim();
+      if(name === "") { alert("Please enter your name"); return; }
+      overlay.style.display = 'none';
+      logVisitor(name); // Now works because we are inside module
+  });
+
+  input.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){ submitBtn.click(); }
+  });
 </script>
+
 
 <script>
 // Open website in new tab
@@ -381,3 +392,4 @@ input.addEventListener('keypress', (e) => {
 </script>
 </body>
 </html>
+
