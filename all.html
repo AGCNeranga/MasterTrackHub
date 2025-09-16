@@ -234,9 +234,9 @@ footer {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-  // Your Firebase configuration
+  // Your Firebase configuration with Realtime Database
   const firebaseConfig = {
     apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
     authDomain: "vipdashboard-14354.firebaseapp.com",
@@ -244,14 +244,15 @@ footer {
     storageBucket: "vipdashboard-14354.firebasestorage.app",
     messagingSenderId: "473646422817",
     appId: "1:473646422817:web:725c533872395a442afc60",
-    measurementId: "G-DYMCWEQYEQ"
+    measurementId: "G-DYMCWEQYEQ",
+    databaseURL: "https://vipdashboard-14354-default-rtdb.firebaseio.com/"
   };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const auth = getAuth(app);
-  const db = getFirestore(app);
+  const database = getDatabase(app);
   const provider = new GoogleAuthProvider();
 
   // Elements
@@ -272,8 +273,9 @@ footer {
       // Show user info
       userInfo.textContent = `✅ Welcome ${user.displayName} (${user.email})`;
 
-      // Save to Firestore
-      await setDoc(doc(db, "users", user.uid), {
+      // Save to Realtime Database
+      const userRef = ref(database, 'users/' + user.uid);
+      await set(userRef, {
         name: user.displayName,
         email: user.email,
         lastLogin: new Date().toISOString()
@@ -362,6 +364,8 @@ updateTimes();
 </script>
 </body>
 </html>
+
+
 
 
 
