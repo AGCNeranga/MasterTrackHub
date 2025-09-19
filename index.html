@@ -186,6 +186,63 @@ footer {
     #name-overlay { overflow-y:auto; padding:20px; }
 }
 
+/* QR Code Card */
+.qr-card {
+    margin-top: 8px;
+    padding: 10px 8px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    animation: glowBorder 3s infinite alternate ease-in-out;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.qr-img {
+    width: 63px;   /* small size */
+    max-width: 30vw;
+    border-radius: 1px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.qr-img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 8px 20px rgba(255,215,0,0.7);
+}
+
+.qr-text {
+    color: #ffd700;
+    font-weight: 200;
+    margin-top: 5px;
+    font-size: 0.9rem;   /* small text */
+    text-align: center;
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+
+/* Border glow animation */
+@keyframes glowBorder {
+    0% { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    50% { border-color: #00c3ff; box-shadow: 0 0 20px rgba(0,195,255,0.7); }
+    100% { border-color: rgba(255,215,0,0.9); box-shadow: 0 0 15px rgba(255,215,0,0.8); }
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .qr-img { width: 120px; }
+    .qr-text { font-size: 0.9rem; }
+}
+@media(max-width:480px){
+    .qr-img { width: 100px; }
+    .qr-text { font-size: 0.8rem; }
+}
+
+
 </style>
 </head>
 <body>
@@ -218,7 +275,15 @@ footer {
     <p id="uk-time"></p>
     <p id="sl-time"></p>
     <p id="aus-time"></p>
+
+    <!-- AGCN QR Code Card -->
+<div class="qr-card">
+    <img src="vip.jpeg" alt="VIP QR Code" class="qr-img">
+    <p class="qr-text">📱Scan for Access</p>
+
 </div>
+</div>
+
 
 <div class="container">
     <h1>Global Horse Race Hub</h1>
