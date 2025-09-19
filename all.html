@@ -242,6 +242,53 @@ footer {
     .qr-text { font-size: 0.8rem; }
 }
 
+/* Fully Responsive Fixes */
+@media(max-width:1024px){ /* Tablets */
+    .time-box {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin: 15px auto;
+        width: 80%;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    .qr-card {
+        width: 80%;
+        margin-top: 10px;
+    }
+    footer {
+        position: relative !important;
+        margin-top: 20px;
+    }
+}
+
+@media(max-width:768px){ /* Large Mobile */
+    .time-box {
+        width: 90%;
+        font-size: 0.85rem;
+        padding: 12px 15px;
+    }
+    .qr-card {
+        width: 90%;
+        padding: 8px;
+    }
+    .qr-text { font-size: 0.8rem; }
+}
+
+@media(max-width:480px){ /* Small Mobile */
+    .time-box {
+        width: 95%;
+        font-size: 0.8rem;
+        padding: 10px 12px;
+    }
+    .qr-card {
+        width: 95%;
+        padding: 6px;
+    }
+    .qr-text { font-size: 0.75rem; }
+}
+
 
 </style>
 </head>
@@ -447,3 +494,4 @@ updateTimes();
 </script>
 </body>
 </html>
+
