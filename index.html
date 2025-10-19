@@ -8,6 +8,11 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
 
+/* Fix for missing emoji flags (🇬🇧 🇦🇺 🇱🇰 etc.) */
+button span, .time-box p, h1 {
+font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", "Poppins", sans-serif !important;}
+
+
 /* Body */
 body {
     min-height: 100vh;
@@ -502,6 +507,7 @@ function underMaintenance() {
 </script>
 </body>
 </html>
+
 
 
 
