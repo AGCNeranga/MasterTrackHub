@@ -3,10 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP Horse Race Dashboard</title>
+<title>VIP Horse Race LS Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+
+/* Fix for missing emoji flags (🇬🇧 🇦🇺 🇱🇰 etc.) */
+button span, .time-box p, h1 {
+font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", "Poppins", sans-serif !important;}
 
 /* Body */
 body {
@@ -82,6 +86,11 @@ h1 {
     transform-style: preserve-3d;
     transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
+
+.time-box p {
+    font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", sans-serif !important;
+}
+
 .time-box:hover {
     transform: rotateY(10deg) rotateX(5deg) scale(1.05);
     box-shadow: 0 20px 40px rgba(255,215,0,0.6), inset 0 0 20px rgba(255,255,255,0.3);
@@ -224,6 +233,20 @@ footer {
     text-shadow: 0 0 4px rgba(0,0,0,0.5);
 }
 
+/* Converter Section */
+#converter {
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    text-align: left;
+    font-size: 0.75rem;
+    color: #fff;
+}
+#converter label, #converter select, #converter input, #converter button {
+    font-size: 0.75rem;
+    margin: 2px 0;
+}
 
 /* Border glow animation */
 @keyframes glowBorder {
@@ -231,65 +254,6 @@ footer {
     50% { border-color: #00c3ff; box-shadow: 0 0 20px rgba(0,195,255,0.7); }
     100% { border-color: rgba(255,215,0,0.9); box-shadow: 0 0 15px rgba(255,215,0,0.8); }
 }
-
-/* Responsive */
-@media(max-width:768px){
-    .qr-img { width: 120px; }
-    .qr-text { font-size: 0.9rem; }
-}
-@media(max-width:480px){
-    .qr-img { width: 100px; }
-    .qr-text { font-size: 0.8rem; }
-}
-
-/* Fully Responsive Fixes */
-@media(max-width:1024px){ /* Tablets */
-    .time-box {
-        position: relative !important;
-        top: auto !important;
-        right: auto !important;
-        margin: 15px auto;
-        width: 80%;
-        text-align: center;
-        font-size: 0.95rem;
-    }
-    .qr-card {
-        width: 80%;
-        margin-top: 10px;
-    }
-    footer {
-        position: relative !important;
-        margin-top: 20px;
-    }
-}
-
-@media(max-width:768px){ /* Large Mobile */
-    .time-box {
-        width: 90%;
-        font-size: 0.85rem;
-        padding: 12px 15px;
-    }
-    .qr-card {
-        width: 90%;
-        padding: 8px;
-    }
-    .qr-text { font-size: 0.8rem; }
-}
-
-@media(max-width:480px){ /* Small Mobile */
-    .time-box {
-        width: 95%;
-        font-size: 0.8rem;
-        padding: 10px 12px;
-    }
-    .qr-card {
-        width: 95%;
-        padding: 6px;
-    }
-    .qr-text { font-size: 0.75rem; }
-}
-
-
 </style>
 </head>
 <body>
@@ -323,29 +287,43 @@ footer {
     <p id="sl-time"></p>
     <p id="aus-time"></p>
 
+    <!-- AUS/UK → SL Time Converter -->
+    <div id="converter">
+        <label>Enter Time (HH:MM):</label>
+        <input type="time" id="userTime">
+        <label>Select Country:</label>
+        <select id="country" onchange="updateOffsetOptions()">
+            <option value="AUS">AUS</option>
+            <option value="UK">UK</option>
+        </select>
+        <label>Select Offset:</label>
+        <select id="offset"></select>
+        <button onclick="convert()">Convert</button>
+        <div id="output"></div>
+    </div>
+
     <!-- AGCN QR Code Card -->
-<div class="qr-card">
-    <img src="qr.png" alt="VIP QR Code" class="qr-img">
-    <p class="qr-text">Scan for Access</p>
-
+    <div class="qr-card">
+        <img src="qr.png" alt="VIP QR Code" class="qr-img">
+        <p class="qr-text">Scan for Access</p>
+    </div>
 </div>
-</div>
-
 
 <div class="container">
-    <h1>Global Horse Race Hub</h1>
+    <h1>Global HorseRace LS Hub</h1>
     <div class="buttons">
-        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>UK Tracker</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>UK RaceTips Editor</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>AUS Tracker</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/kh-marker/')"><span>Harness K/H Tool 1</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/.k..h.-marker2/')"><span>Harness .K./.H. Tool 2</span></button>
-        <button onclick="openSite('https://agcneranga.github.io/TARR_AUS_PA/')"><span>TARR AUS .K./.H. Tool 3</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>🇬🇧 Top UK Race Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>🇬🇧 UK RaceTips Editor</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>🇦🇺 Top AUS (TARR|HARR) Race Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/RaceKH3/')"><span>🇦🇺 AUS New (v9.00 e0|.K./.H.(HARR)) Marker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/.k..h.-marker2/')"><span>🇦🇺 AUS .K./.H. (HARR) Marker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TARR_AUS_PA/')"><span>🇦🇺 AUS .K./.H. (TARR) Marker </span></button>
+        <button onclick="underMaintenance()"> <span>🇦🇺 AUS (GREY) Tracker</span></button>
     </div>
 </div>
 
 <footer>
-    &copy; 2025 Charith Neranga | VIP Dashboard
+    &copy; 2025 Charith Neranga | VIP Dashboard LS BET 
 </footer>
 
 <script type="module">
@@ -356,7 +334,7 @@ footer {
     apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
     authDomain: "vipdashboard-14354.firebaseapp.com",
     projectId: "vipdashboard-14354",
-    storageBucket: "vipdashboard-14354.firebasestorage.app",
+    storageBucket: "vipdashboard-14354.app",
     messagingSenderId: "473646422817",
     appId: "1:473646422817:web:725c533872395a442afc60",
     measurementId: "G-DYMCWEQYEQ",
@@ -436,12 +414,10 @@ footer {
 </script>
 
 <script>
-// Open website in new tab
 function openSite(url){
     window.open(url,'_blank');
 }
 
-// dynamic AGCN buttons
 document.querySelectorAll('.buttons button').forEach(btn => {
     for(let i=0;i<5;i++){
         let particle = document.createElement('div');
@@ -453,7 +429,6 @@ document.querySelectorAll('.buttons button').forEach(btn => {
     }
 });
 
-// Smooth AGCN slideshow
 const bgImages = [
     'https://www.virtuallakedistrict.net/wp-content/uploads/2022/10/A-Guide-To-Horse-Racing.jpg',
     'https://horseracinggift.co.uk/cdn/shop/files/AdobeStock_49474608_77d0e1d1-a2a7-4624-809a-b158df80ca20.jpg?v=1693395886&width=1500',
@@ -479,7 +454,6 @@ setInterval(() => {
     }, 3000);
 }, 8000);
 
-// Updated AGCN Time Function
 function updateTimes(){
     let now = new Date();
     let uk = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: true });
@@ -491,8 +465,43 @@ function updateTimes(){
 }
 setInterval(updateTimes, 1000);
 updateTimes();
+
+function underMaintenance() {
+  alert("🚧 This page is under maintenance. Coming soon!");
+}
+
+// --- Converter JS ---
+function updateOffsetOptions() {
+    const country = document.getElementById('country').value;
+    const offsetSelect = document.getElementById('offset');
+    offsetSelect.innerHTML = '';
+    let offsets = [];
+    if(country === 'AUS') offsets = ['+06:30', '+07:30'];
+    else if(country === 'UK') offsets = ['+04:30', '+05:30'];
+    offsets.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o;
+        opt.text = o;
+        offsetSelect.appendChild(opt);
+    });
+}
+updateOffsetOptions();
+
+function convert() {
+    const input = document.getElementById('userTime').value;
+    const offsetStr = document.getElementById('offset').value;
+    if(!input) { alert("Please enter time!"); return; }
+    let [hours, minutes] = input.split(':').map(Number);
+    const sign = offsetStr[0] === '+' ? 1 : -1;
+    const [oh, om] = offsetStr.slice(1).split(':').map(Number);
+    const offsetMinutes = sign * (oh*60 + om);
+    let totalMins = hours*60 + minutes + offsetMinutes;
+    totalMins = (totalMins + 24*60) % (24*60);
+    let h = Math.floor(totalMins / 60);
+    let m = totalMins % 60;
+    const slTime = ("0"+h).slice(-2) + ":" + ("0"+m).slice(-2);
+    document.getElementById('output').innerText = "SL Time: " + slTime;
+}
 </script>
 </body>
 </html>
-
-
