@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Horse Race LS Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+
+/* Fix for missing emoji flags (🇬🇧 🇦🇺 🇱🇰 etc.) */
+button span, .time-box p, h1 {
+font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", "Poppins", sans-serif !important;}
+
+
+/* Body */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Background */
+.bg-layer {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 3s ease-in-out;
+    z-index: -2;
+}
+
+/* Dark overlay */
+body::before {
+    content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.5); z-index:-1;
+}
+
+/* Container */
+.container {
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    padding: 30px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    z-index:1;
+}
+
+/* Heading */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    color: #ffd700;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
+
+/* Time Box 3D Style */
+.time-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+    padding: 18px 25px;
+    border-radius: 18px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: right;
+    animation: fadeIn 1.5s ease-in-out;
+    border: 1px solid rgba(255,255,255,0.25);
+    z-index:2;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.time-box p {
+    font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", sans-serif !important;
+}
+
+.time-box:hover {
+    transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    box-shadow: 0 20px 40px rgba(255,215,0,0.6), inset 0 0 20px rgba(255,255,255,0.3);
+}
+.time-box p {
+    margin: 6px 0;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+}
+
+/* Neon glow animation */
+@keyframes glow {
+    0% { box-shadow: 0 0 10px #ffd700, inset 0 0 10px rgba(255,255,255,0.2); }
+    50% { box-shadow: 0 0 25px #00c3ff, inset 0 0 20px rgba(255,255,255,0.3); }
+    100% { box-shadow: 0 0 10px #ffd700, inset 0 0 10px rgba(255,255,255,0.2); }
+}
+.time-box { animation: glow 4s infinite alternate ease-in-out, fadeIn 1.5s ease-in-out; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Buttons */
+.buttons { display: flex; flex-direction: column; gap: 15px; }
+
+/* VIP AGCN Button style */
+button {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border: none;
+    padding: 15px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 3px 10px rgba(255,255,255,0.1) inset;
+    transform-style: preserve-3d;
+}
+
+/* Hover 3D AGCN */
+button:hover {
+    transform: translateY(-4px) scale(1.03) rotateX(2deg);
+    box-shadow: 0 15px 35px rgba(255,215,0,0.8), 0 0 15px rgba(255,255,255,0.3) inset;
+}
+
+/* Shine overlay */
+button::before {
+    content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg); transition: all 0.5s; filter: blur(6px);
+}
+button:hover::before { top:-20%; left:-20%; }
+
+/* Particle effect */
+.particle-btn {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    animation: float 2s infinite ease-in-out;
+}
+@keyframes float {
+    0% { transform: translate(0,0) scale(1); opacity:1; }
+    50% { transform: translate(calc(-10px + 20px*var(--randX)), -15px) scale(1.2); opacity:0.6; }
+    100% { transform: translate(0,0) scale(1); opacity:1; }
+}
+
+/* Button text icon */
+button span { position: relative; z-index:1; }
+button span::before { content: "🏇 "; }
+
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+/* Responsive Fixes */
+@media(max-width:1024px){
+    h1 { font-size: 1.8rem; }
+    button { font-size: 0.95rem; }
+}
+@media(max-width:768px){
+    .time-box { position: relative; top:auto; right:auto; margin-bottom:15px; text-align:center; }
+    .container { max-width: 95%; padding: 20px 15px; }
+    h1 { font-size: 1.5rem; margin-bottom: 15px; }
+    button { font-size: 0.9rem; padding: 12px; }
+}
+@media(max-width:480px){
+    h1 { font-size: 1.2rem; }
+    button { font-size: 0.85rem; padding: 10px; }
+    footer { font-size: 0.75rem; }
+    #name-overlay { overflow-y:auto; padding:20px; }
+}
+
+/* QR Code Card */
+.qr-card {
+    margin-top: 8px;
+    padding: 10px 8px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    animation: glowBorder 3s infinite alternate ease-in-out;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.qr-img {
+    width: 63px;   /* small size */
+    max-width: 30vw;
+    border-radius: 1px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.qr-img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 8px 20px rgba(255,215,0,0.7);
+}
+
+.qr-text {
+    color: #ffd700;
+    font-weight: 200;
+    margin-top: 5px;
+    font-size: 0.9rem;   /* small text */
+    text-align: center;
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+
+/* Border glow animation */
+@keyframes glowBorder {
+    0% { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    50% { border-color: #00c3ff; box-shadow: 0 0 20px rgba(0,195,255,0.7); }
+    100% { border-color: rgba(255,215,0,0.9); box-shadow: 0 0 15px rgba(255,215,0,0.8); }
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .qr-img { width: 120px; }
+    .qr-text { font-size: 0.9rem; }
+}
+@media(max-width:480px){
+    .qr-img { width: 100px; }
+    .qr-text { font-size: 0.8rem; }
+}
+
+/* Fully Responsive Fixes */
+@media(max-width:1024px){ /* Tablets */
+    .time-box {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin: 15px auto;
+        width: 80%;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    .qr-card {
+        width: 80%;
+        margin-top: 10px;
+    }
+    footer {
+        position: relative !important;
+        margin-top: 20px;
+    }
+}
+
+@media(max-width:768px){ /* Large Mobile */
+    .time-box {
+        width: 90%;
+        font-size: 0.85rem;
+        padding: 12px 15px;
+    }
+    .qr-card {
+        width: 90%;
+        padding: 8px;
+    }
+    .qr-text { font-size: 0.8rem; }
+}
+
+@media(max-width:480px){ /* Small Mobile */
+    .time-box {
+        width: 95%;
+        font-size: 0.8rem;
+        padding: 10px 12px;
+    }
+    .qr-card {
+        width: 95%;
+        padding: 6px;
+    }
+    .qr-text { font-size: 0.75rem; }
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Name Entry Overlay -->
+<div id="name-overlay" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    backdrop-filter: blur(10px); background: rgba(0,0,0,0.8);
+    display:flex; justify-content:center; align-items:center;
+    flex-direction:column; z-index:9999; color:white; text-align:center;
+">
+    <h2 style="margin-bottom:15px;">Enter Your Name to Continue</h2>
+    <input id="visitor-name" type="text" placeholder="Your Name" style="
+        padding:12px 20px; border-radius:10px; border:none;
+        font-size:1rem; margin-bottom:15px; text-align:center;
+    "/>
+    <button id="submit-name" style="
+        padding:10px 20px; border-radius:10px; border:none;
+        font-size:1rem; background:linear-gradient(135deg, #6a11cb, #2575fc);
+        color:white; cursor:pointer;
+    ">Enter</button>
+</div>
+
+<!-- Background layers -->
+<div class="bg-layer" id="bg1"></div>
+<div class="bg-layer" id="bg2"></div>
+
+<!-- Time Box (3D) -->
+<div class="time-box">
+    <p id="uk-time"></p>
+    <p id="sl-time"></p>
+    <p id="aus-time"></p>
+
+    <!-- AGCN QR Code Card -->
+<div class="qr-card">
+    <img src="qr.png" alt="VIP QR Code" class="qr-img">
+    <p class="qr-text">Scan for Access</p>
+
+</div>
+</div>
+
+
+<div class="container">
+    <h1>Global HorseRace LS Hub</h1>
+    <div class="buttons">
+        <button onclick="openSite('https://agcneranga.github.io/UKTE/')"><span>🇬🇧 Top UK Race Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TCE/')"><span>🇬🇧 UK RaceTips Editor</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/AUS-Race-Premium/')"><span>🇦🇺 Top AUS (TARR|HARR) Race Tracker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/RaceKH3/')"><span>🇦🇺 AUS New (v9.00 e0|.K./.H.(HARR)) Marker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/.k..h.-marker2/')"><span>🇦🇺 AUS .K./.H. (HARR) Marker</span></button>
+        <button onclick="openSite('https://agcneranga.github.io/TARR_AUS_PA/')"><span>🇦🇺 AUS .K./.H. (TARR) Marker </span></button>
+         <button onclick="underMaintenance()"> <span>🇦🇺 AUS (GREY) Tracker</span></button>
+
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 Charith Neranga | VIP Dashboard LS BET 
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbwTC7BsmiVgQ8lAwMb6oxUlgsZV6_ukY",
+    authDomain: "vipdashboard-14354.firebaseapp.com",
+    projectId: "vipdashboard-14354",
+    storageBucket: "vipdashboard-14354.firebasestorage.app",
+    messagingSenderId: "473646422817",
+    appId: "1:473646422817:web:725c533872395a442afc60",
+    measurementId: "G-DYMCWEQYEQ",
+    databaseURL: "https://vipdashboard-14354-default-rtdb.firebaseio.com/"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  function detectBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf("Chrome") > -1) return "Chrome";
+    if (ua.indexOf("Firefox") > -1) return "Firefox";
+    if (ua.indexOf("Safari") > -1) return "Safari";
+    if (ua.indexOf("Edge") > -1) return "Edge";
+    if (ua.indexOf("Opera") > -1) return "Opera";
+    return "Unknown";
+  }
+
+  function detectOS() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf("Windows NT 10.0") !== -1) return "Windows 10";
+    if (ua.indexOf("Windows NT 6.3") !== -1) return "Windows 8.1";
+    if (ua.indexOf("Windows NT 6.2") !== -1) return "Windows 8";
+    if (ua.indexOf("Windows NT 6.1") !== -1) return "Windows 7";
+    if (ua.indexOf("Mac OS X") !== -1) return "MacOS";
+    if (ua.indexOf("Linux") !== -1) return "Linux";
+    if (ua.indexOf("Android") !== -1) return "Android";
+    if (ua.indexOf("iPhone") !== -1) return "iOS";
+    return "Unknown";
+  }
+
+  async function logVisitor(name) {
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+      const data = await response.json();
+
+      const visitorData = {
+        name: name || "Anonymous",
+        timestamp: new Date().toISOString(),
+        ip: data.ip,
+        country: data.country_name,
+        region: data.region,
+        city: data.city,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        browser: detectBrowser(),
+        os: detectOS(),
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        url: window.location.href
+      };
+
+      const visitorsRef = ref(database, 'visitors');
+      push(visitorsRef, visitorData);
+      console.log("Visitor data saved:", visitorData);
+    } catch(err) {
+      console.error("Error logging visitor:", err);
+    }
+  }
+
+  // --- Overlay Handling ---
+  const overlay = document.getElementById('name-overlay');
+  const input = document.getElementById('visitor-name');
+  const submitBtn = document.getElementById('submit-name');
+
+  submitBtn.addEventListener('click', () => {
+      const name = input.value.trim();
+      if(name === "") { alert("Please enter your name"); return; }
+      overlay.style.display = 'none';
+      logVisitor(name);
+  });
+
+  input.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){ submitBtn.click(); }
+  });
+</script>
+
+<script>
+// Open website in new tab
+function openSite(url){
+    window.open(url,'_blank');
+}
+
+// dynamic AGCN buttons
+document.querySelectorAll('.buttons button').forEach(btn => {
+    for(let i=0;i<5;i++){
+        let particle = document.createElement('div');
+        particle.classList.add('particle-btn');
+        particle.style.setProperty('--randX', Math.random());
+        particle.style.top = Math.random()*100 + '%';
+        particle.style.left = Math.random()*100 + '%';
+        btn.appendChild(particle);
+    }
+});
+
+// Smooth AGCN slideshow
+const bgImages = [
+    'https://www.virtuallakedistrict.net/wp-content/uploads/2022/10/A-Guide-To-Horse-Racing.jpg',
+    'https://horseracinggift.co.uk/cdn/shop/files/AdobeStock_49474608_77d0e1d1-a2a7-4624-809a-b158df80ca20.jpg?v=1693395886&width=1500',
+    'https://static1.squarespace.com/static/517636f8e4b0cb4f8c8697ba/t/687270061c520f20fb77da16/1739740259252/Guernsey+Race+Club+L%27Ancresse+meeting+2019?format=1500w',
+    'https://www.fakenhamracecourse.co.uk/wp-content/uploads/2024/05/LBM_6892-scaled-e1714561421123.jpg'
+];
+let current = 0;
+let bg1 = document.getElementById('bg1');
+let bg2 = document.getElementById('bg2');
+
+bg1.style.backgroundImage = `url('${bgImages[0]}')`;
+bg1.style.opacity = 1;
+bg2.style.opacity = 0;
+
+setInterval(() => {
+    const next = (current + 1) % bgImages.length;
+    bg2.style.backgroundImage = `url('${bgImages[next]}')`;
+    bg2.style.opacity = 1;
+    setTimeout(() => {
+        bg1.style.backgroundImage = bgImages[next];
+        bg2.style.opacity = 0;
+        current = next;
+    }, 3000);
+}, 8000);
+
+// Updated AGCN Time Function
+function updateTimes(){
+    let now = new Date();
+    let uk = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: true });
+    document.getElementById("uk-time").innerText = "🇬🇧 UK : " + uk;
+    let sl = now.toLocaleString("en-GB", { timeZone: "Asia/Colombo", hour12: true });
+    document.getElementById("sl-time").innerText = "🇱🇰 SL : " + sl;
+    let aus = now.toLocaleString("en-GB", { timeZone: "Australia/Sydney", hour12: true });
+    document.getElementById("aus-time").innerText = "🇦🇺 AUS : " + aus;
+}
+setInterval(updateTimes, 1000);
+updateTimes();
+
+function underMaintenance() {
+  alert("🚧 This page is under maintenance. Coming soon!");
+  // Or, if you prefer a console log:
+  // console.log("Page is still under development");
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
