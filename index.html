@@ -290,14 +290,14 @@ footer {
 
     <!-- AUS/UK → SL Time Converter -->
     <div id="converter">
-        <label>Enter Time (UK / AUS) (HH:MM):</label>
+        <label>Enter Time (UK / AUS) :</label>
         <input type="time" id="userTime">
-        <label>Select Country:</label>
+        <label>Select Country :</label>
         <select id="country" onchange="updateOffsetOptions()">
             <option value="AUS">AUS</option>
             <option value="UK">UK</option>
         </select>
-        <label>Select Offset:</label>
+        <label>Select Offset :</label>
         <select id="offset"></select>
         <button onclick="convert()">Convert</button>
         <div id="output"></div>
@@ -506,6 +506,7 @@ function convert() {
 </script>
 </body>
 </html>
+
 
 
 
